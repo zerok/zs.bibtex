@@ -1,0 +1,9 @@
+syntax: glob
+bin
+parts
+dist
+downloads
+develop-eggs
+.installed.cfg
+*.egg-info
+README.html
