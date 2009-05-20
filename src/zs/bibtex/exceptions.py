@@ -1,4 +1,13 @@
-class UnsupportedEntryType(RuntimeError): pass
+"""
+Exceptions used by zs.bibtex itself.
+"""
+
+class UnsupportedEntryType(RuntimeError): 
+    """
+    This exception is raised when the parser is tasked to create a new Entry
+    instance for an unknown type.
+    """
+    pass
 
 class InvalidStructure(RuntimeError):
     """
@@ -6,16 +15,16 @@ class InvalidStructure(RuntimeError):
     or (if enabled in the validator) any potentially unsupported fields are
     present.
     """
-    def __init__(self, value, required_fields=[], unsupported_fields=[]):
+    def __init__(self, value, required_fields=None, unsupported_fields=None):
         self.required_fields = required_fields
         self.unsupported_fields = unsupported_fields
         super(InvalidStructure, self).__init__(value)
 
     def __str__(self):
         val = super(InvalidStructure, self).__str__()
-        if len(self.required_fields):
+        if self.required_fields is not None and len(self.required_fields):
             val += ' [Missing required fields: %s]' % str(self.required_fields)
-        if len(self.unsupported_fields):
+        if self.unsupported_fields is not None and len(self.unsupported_fields):
             val += ' [Unsupported fields: %s]' % str(self.unsupported_fields)
         return val
 
@@ -30,5 +39,6 @@ class BrokenCrossReferences(RuntimeError):
 
     def __str__(self):
         val = super(BrokenCrossReferences, self).__str__()
-        return val + ' [Broken references: %s]' % str(['%s => %s' % (e.name, e['crossref']) for e in self.entries])
+        refs = str(['%s => %s' % (e.name, e['crossref']) for e in self.entries])
+        return val + ' [Broken references: %s]' % refs 
 

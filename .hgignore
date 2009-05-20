@@ -7,3 +7,4 @@ develop-eggs
 .installed.cfg
 *.egg-info
 README.html
+env
