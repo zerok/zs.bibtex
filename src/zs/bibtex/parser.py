@@ -3,6 +3,7 @@ This module contains a simple BibTeX parser based on pyparsing. If all you
 want is to parse some BibTeX, give ``parse_file`` and ``parse_string`` a 
 try.
 """
+from __future__ import with_statement
 
 import string
 import re
