@@ -2,6 +2,13 @@
 Exceptions used by zs.bibtex itself.
 """
 
+class InvalidEntryType(RuntimeError):
+    """
+    ... is raised if a class is registered in the TypeRegistry that isn't a
+    subclass of structures.Entry.
+    """
+    pass
+
 class UnsupportedEntryType(RuntimeError): 
     """
     This exception is raised when the parser is tasked to create a new Entry

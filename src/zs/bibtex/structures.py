@@ -8,8 +8,33 @@ Entry also has a handful of subclasses; one for each common entry-type
 in BibTeX.
 """
 
-from .exceptions import InvalidStructure, BrokenCrossReferences
+from ..bibtex import exceptions
 
+
+class TypeRegistry(object):
+    """
+    Global registry for entry types.
+    """
+    _registry = {}
+
+    @classmethod
+    def register(cls, name, type_):
+        """
+        Register a new type for an entry-type. The 2nd argument has to be a
+        subclass of structures.Entry.
+        """
+
+        if not issubclass(type_, Entry):
+            raise exceptions.InvalidEntryType, "%s is not a subclass of Entry" % str(type_)
+        cls._registry[name.lower()] = type_
+
+    @classmethod
+    def get_type(cls, name):
+        """
+        Retrieve a type from the registry using its name as used in a bibtex 
+        file.
+        """
+        return cls._registry.get(name.lower())
 
 class Bibliography(dict):
     """
@@ -43,7 +68,7 @@ class Bibliography(dict):
                 if crossref not in self:
                     broken.append(value)
         if len(broken):
-            raise BrokenCrossReferences('One or more cross reference could not'
+            raise exceptions.BrokenCrossReferences('One or more cross reference could not'
                     ' be resolved', broken)
 
     def add(self, entry):
@@ -96,7 +121,7 @@ class Entry(dict):
                 - set(self.optional_fields)
         if len(required_errors) or (raise_unsupported 
                 and len(unsupported_fields)):
-            raise InvalidStructure("Missing or unsupported fields found", 
+            raise exceptions.InvalidStructure("Missing or unsupported fields found",
                     required_fields=required_errors, 
                     unsupported_fields=unsupported_fields)
 
@@ -109,12 +134,17 @@ class Article(Entry):
     required_fields = ('author', 'title', 'journal', 'year')
     optional_fields = ('value', 'number', 'pages', 'month', 'note', 'key')
 
+TypeRegistry.register('article', Article)
+
+
 class Book(Entry):
     """A book that has already been published or at least has a publisher."""
 
     required_fields = (('author', 'editor'), 'title', 'publisher', 'year')
     optional_fields = ('address', 'pages', 'volume', 'series', 'edition', 
             'month', 'note', 'key')
+
+TypeRegistry.register('book', Book)
 
 class Booklet(Entry): 
     """
@@ -126,6 +156,9 @@ class Booklet(Entry):
     optional_fields = ('author', 'howpublished', 'address', 'month', 'year', 
             'note', 'key')
 
+TypeRegistry.register('booklet', Booklet)
+
+
 class Incollection(Entry): 
     """Part of a book but with its own title."""
 
@@ -133,10 +166,16 @@ class Incollection(Entry):
     optional_fields = ('editor', 'pages', 'organization', 'publisher', 
             'address', 'month', 'note', 'key')
 
+TypeRegistry.register('incollection', Incollection)
+
+
 class Inproceedings(Incollection): 
     """Article that is part of a conference proceedings."""
 
     pass
+
+TypeRegistry.register('inproceedings', Inproceedings)
+
 
 class Conference(Inproceedings): 
     """Similar to ``Inproceedings``."""
@@ -144,6 +183,9 @@ class Conference(Inproceedings):
     required_fields = ('author', 'title', 'booktitle', 'year')
     optional_fields = ('editor', 'pages', 'organization', 'publisher', 
             'address', 'month', 'note', 'key')
+
+TypeRegistry.register('conference', Conference)
+
 
 class Inbook(Entry): 
     """Part of a book."""
@@ -153,6 +195,8 @@ class Inbook(Entry):
     optional_fields = ('volume', 'series', 'address', 'edition', 'month', 
             'note', 'key')
 
+TypeRegistry.register('inbook', Inbook)
+
 
 class Manual(Entry): 
     """A technical manual."""
@@ -161,11 +205,17 @@ class Manual(Entry):
     optional_fields = ('author', 'organization', 'address', 'edition', 'year',
             'month', 'note', 'key')
 
+TypeRegistry.register('manual', Manual)
+
+
 class Mastersthesis(Entry): 
     """A Master's thesis"""
 
     required_fields = ('author', 'title', 'school', 'year')
     optional_fields = ('address', 'month', 'note', 'key')
+
+TypeRegistry.register('mastersthesis', Mastersthesis)
+
 
 class Misc(Entry):
     """Type of document that doesn't fit into any of the other categories."""
@@ -174,9 +224,15 @@ class Misc(Entry):
     optional_fields = ('author', 'title', 'howpublished', 'month', 'year', 
             'note', 'key')
 
+TypeRegistry.register('misc', Misc)
+
+
 class Phdthesis(Mastersthesis): 
     """A Ph.D. thesis."""
     pass
+
+TypeRegistry.register('phdthesis', Phdthesis)
+
 
 class Proceedings(Entry):
     """Conference proceedings."""
@@ -185,13 +241,22 @@ class Proceedings(Entry):
     optional_fields = ('editor', 'publisher', 'organization', 'address', 
             'month', 'note', 'key')
 
+TypeRegistry.register('proceedings', Proceedings)
+
+
 class Techreport(Entry):
     """A technical report published by an institution."""
 
     required_fields = ('author', 'title', 'institution', 'year')
     optional_fields = ('type', 'number', 'address', 'month', 'note', 'key')
 
+TypeRegistry.register('techreport', Techreport)
+
+
 class Unpublished(Entry):
     """A not yet published document that already has an author and a title."""
     required_fields = ('author', 'title', 'note',)
     optional_fields = ('month', 'year', 'key',)
+
+TypeRegistry.register('unpublished', Unpublished)
+

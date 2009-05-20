@@ -38,8 +38,8 @@ def parse_entry(source, loc, tokens):
     Converts the tokens of an entry into an Entry instance. If no applicable
     type is available, an UnsupportedEntryType exception is raised.
     """
-    type_ = unicode(tokens[1])
-    entry_type = getattr(structures, type_.capitalize(), None)
+    type_ = unicode(tokens[1]).lower()
+    entry_type = structures.TypeRegistry.get_type(type_)
     if entry_type is None or not issubclass(entry_type, structures.Entry):
         raise exceptions.UnsupportedEntryType, \
                 "%s is not a supported entry type" % type_

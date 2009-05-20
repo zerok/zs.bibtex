@@ -95,6 +95,18 @@ class ParserTests(unittest.TestCase):
         self.assertRaises(exceptions.UnsupportedEntryType, parse_entry, 
                 inp)
 
+    def test_basetypes(self):
+        """
+        Tests that all basic Entry-subclasses are registered.
+        """
+        types = ('article', 'book', 'booklet', 'incollection',
+                 'inproceedings', 'conference', 'inbook', 'manual',
+                 'mastersthesis', 'misc', 'phdthesis', 'proceedings',
+                 'techreport', 'unpublished',)
+        for type_ in types:
+            inp = '@%s {name, title = {test}}' % type_
+            parse_entry(inp)
+
 class ValidationChecks(unittest.TestCase):
     """
     Various checks for the entry and bibliography validation.
@@ -189,4 +201,30 @@ class SpecialFieldTests(unittest.TestCase):
                 entry['author'])
         entry = parse_entry('@article{somename, author={Max Mustermann}}')
         self.assertEqual('Max Mustermann', entry['author'])
+
+class CustomizationTests(unittest.TestCase):
+    """
+    Tests for the customization features.
+    """
+
+    def test_global_typeregistry(self):
+        """
+        Check if it's possible to globally register a new Entry type.
+        """
+
+        class TestEntryType(structures.Entry):
+            pass
+        structures.TypeRegistry.register('test', TestEntryType)
+
+        parse_entry('@test{name, title={test}}')
+
+    def test_invalid_entryclass(self):
+        """
+        Make sure that the new Entry type is a subclass of Entry.
+        """
+
+        class TestEntryType(object):
+            pass
+        self.assertRaises(exceptions.InvalidEntryType,
+                structures.TypeRegistry.register, 'test', TestEntryType)
 
