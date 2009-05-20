@@ -39,7 +39,7 @@ class Entry(dict):
     """
 
     required_fields = ('title',)
-    optional_fields = []
+    optional_fields = ('key', )
 
     def __init__(self, name=None):
         self.name = name
@@ -68,19 +68,56 @@ class Entry(dict):
                     required_fields=required_errors, 
                     unsupported_fields=unsupported_fields)
 
+# The following required_fields/optiona_fields attributes are based on 
+# http://en.wikipedia.org/wiki/Bibtex
 class Article(Entry): 
     required_fields = ('author', 'title', 'journal', 'year')
-    optional_fields = ('value', 'number', 'pages', 'month', 'note')
+    optional_fields = ('value', 'number', 'pages', 'month', 'note') + Entry.optional_fields
 
-class Booklet(Entry): pass
-class Conference(Entry): pass
-class Inbook(Entry): pass
-class Incollection(Entry): pass
-class Inproceedings(Entry): pass
-class Manual(Entry): pass
-class Masterthesis(Entry): pass
-class Misc(Entry): pass
-class Phdthesis(Entry): pass
-class Proceedings(Entry): pass
-class Techreport(Entry): pass
-class Unpublished(Entry): pass
+class Book(Entry):
+    required_fields = (('author', 'editor'), 'title', 'publisher', 'year')
+    optional_fields = ('address', 'pages', 'volume', 'series', 'edition', 'month', 'note') + Entry.optional_fields
+
+class Booklet(Entry): 
+    required_fields = Entry.required_fields
+    optional_fields = ('author', 'howpublished', 'address', 'month', 'year', 'note', 'key')
+
+class Conference(Entry): 
+    required_fields = ('author', 'title', 'booktitle', 'year')
+    optional_fields = ('editor', 'pages', 'organization', 'publisher', 'address', 'month', 'note', 'key')
+
+class Inbook(Entry): 
+    required_fields = (('author', 'editor'), 'title', 'publisher', 'year', ('chapter', 'pages'))
+    optional_fields = ('volume', 'series', 'address', 'edition', 'month', 'note', 'key')
+
+class Incollection(Entry): 
+    required_fields = ('author', 'title', 'year', 'booktitle'),
+    optional_fields = ('editor', 'pages', 'organization', 'publisher', 'address', 'month', 'note', 'key')
+
+class Inproceedings(Incollection): pass
+
+class Manual(Entry): 
+    required_fields = ('title',)
+    optional_fields = ('author', 'organization', 'address', 'edition', 'year', 'month', 'note', 'key')
+
+class Masterthesis(Entry): 
+    required_fields = ('author', 'title', 'school', 'year')
+    optional_fields = ('address', 'month', 'note', 'key')
+
+class Misc(Entry):
+    required_fields = []
+    optional_fields = ('author', 'title', 'howpublished', 'month', 'year', 'note', 'key')
+
+class Phdthesis(Masterthesis): pass
+
+class Proceedings(Entry):
+    required_fields = ('title', 'year')
+    optional_fields = ('editor', 'publisher', 'organization', 'address', 'month', 'note', 'key')
+
+class Techreport(Entry):
+    required_fields = ('author', 'title', 'institution', 'year')
+    optional_fields = ('type', 'number', 'address', 'month', 'note', 'key')
+
+class Unpublished(Entry):
+    required_fields = ('author', 'title', 'note',)
+    optional_fields = ('month', 'year', 'key',)

@@ -30,4 +30,8 @@ the entries. It also supports an optional ``raise_unsupported``
 keyword-argument which raises an exception once a possibly unsupported field
 is used in an entry.
 
+The information about what fields are required and optional for what kind of 
+entry is based on the `BibTeX article`_ on Wikipedia.
+
+.. _BibTeX article: http://en.wikipedia.org/wiki/Bibtex
         
