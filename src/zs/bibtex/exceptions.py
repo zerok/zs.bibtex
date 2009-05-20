@@ -1,3 +1,5 @@
+class UnsupportedEntryType(RuntimeError): pass
+
 class InvalidStructure(RuntimeError):
     """
     This exception is raised if a structure is missing any required fields

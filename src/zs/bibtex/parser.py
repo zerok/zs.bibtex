@@ -3,7 +3,7 @@ import re
 import codecs
 import pyparsing as pp
 
-from ..bibtex import structures
+from ..bibtex import structures, exceptions
 
 
 def normalize_value(str):
@@ -26,7 +26,11 @@ def parse_field(s, loc, tokens):
 
 def parse_entry(s, loc, tokens):
     type_ = unicode(tokens[1])
-    entry = getattr(structures, type_.capitalize())()
+    entry_type = getattr(structures, type_.capitalize(), None)
+    if entry_type is None or not issubclass(entry_type, structures.Entry):
+        raise exceptions.UnsupportedEntryType, \
+                "%s is not a supported entry type" % type_
+    entry = entry_type()
     entry.name = unicode(tokens[3])
     for k, v in [t for t in tokens[4:-1] if t != ',']:
         entry[k]=v
@@ -35,7 +39,6 @@ def parse_entry(s, loc, tokens):
 def parse_bibliography(s, loc, tokens):
     bib = structures.Bibliography()
     for entry in tokens:
-        print "Found: %s" % entry.name
         bib.add(entry)
     return bib
 

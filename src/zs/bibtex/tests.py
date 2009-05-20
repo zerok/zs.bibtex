@@ -3,7 +3,7 @@ import StringIO
 import pyparsing
 
 from ..bibtex import structures, parser
-from .exceptions import InvalidStructure, BrokenCrossReferences
+from .exceptions import InvalidStructure, BrokenCrossReferences, UnsupportedEntryType
 
 
 class ParserTests(unittest.TestCase):
@@ -94,4 +94,10 @@ class ParserTests(unittest.TestCase):
     }''')
         self.assertEquals(1, len(bib))
         self.assertEquals('lala', bib['name']['title'])
+
+    def test_entry_subtype(self):
+        input = '@bibliography{name, title={test}}'
+        self.assertRaises(UnsupportedEntryType, self.parse_entry, input)
+        input = '@article2{name, title={test}}'
+        self.assertRaises(UnsupportedEntryType, self.parse_entry, input)
 
