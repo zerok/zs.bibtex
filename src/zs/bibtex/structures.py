@@ -1,4 +1,12 @@
 """
+Copyright (c) 2009, Horst Gutmann
+All rights reserved.
+
+This code is made available under the BSD license. For more details
+visit http://bitbucket.org/zerok/zsbibtex/overview/
+
+-----------------------------------------------------------------------------
+
 This module holds all the structures produced by the parser. The main 
 structures are the clases ``Bibliography`` and ``Entry``. Both are 
 slightly enhanced subclasses of ``dict`` and offer some additional
