@@ -162,7 +162,7 @@ class Article(Entry):
     """Article in a journal, magazine etc."""
 
     required_fields = ('author', 'title', 'journal', 'year')
-    optional_fields = ('value', 'number', 'pages', 'month', 'note', 'key')
+    optional_fields = ('volume', 'number', 'pages', 'month', 'note', 'key')
 
 TypeRegistry.register('article', Article)
 

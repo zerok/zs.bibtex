@@ -84,6 +84,19 @@ class ParserTests(unittest.TestCase):
         }''')
         self.assertEqual('mm09', entry.name)
 
+    def test_regression_article_with_volume(self):
+        """
+        Articles should support the volume attribute
+        """
+        entry = parser.parse_string('''@article{mm09,
+        author = {Max Mustermann},
+        title = {The story of my life},
+        year = {2009},
+        journal = {Life Journale},
+        volume = {1}
+        }''')
+        entry.validate(raise_unsupported=True)
+
     def test_uppercase(self):
         """
         Fieldnames and types should get normalized to their lowercase 
