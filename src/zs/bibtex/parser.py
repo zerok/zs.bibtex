@@ -107,6 +107,7 @@ bstring.setParseAction(parse_bstring)
 label = pp.Regex(r'[a-zA-Z0-9-_:/]+')
 field_value = pp.Or([
         bstring,
+        pp.Regex(r'[0-9]+'),
         pp.QuotedString(quoteChar='"', multiline=True, escChar='\\'),
         pp.QuotedString(quoteChar="'", multiline=True, escChar='\\')
         ])

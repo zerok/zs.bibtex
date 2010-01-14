@@ -95,7 +95,14 @@ class ParserTests(unittest.TestCase):
            pages = "73+",
            note = "This is a cross-referencing ARTICLE entry",
         }''')
-        pass
+
+    def test_regression_numeric_value_without_quotes(self):
+        parse_entry('''@article{mm09,
+        author = {Max Mustermann},
+        title = {The story of my life},
+        year = 2009,
+        journal = {Life Journale}
+        }''')
 
     def test_uppercase(self):
         """
