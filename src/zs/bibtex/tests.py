@@ -84,18 +84,18 @@ class ParserTests(unittest.TestCase):
         }''')
         self.assertEqual('mm09', entry.name)
 
-    def test_regression_article_with_volume(self):
+    def test_regression_optional_last_comma(self):
         """
-        Articles should support the volume attribute
+        The last statement may or may not be finished with a ,
         """
-        entry = parser.parse_string('''@article{mm09,
-        author = {Max Mustermann},
-        title = {The story of my life},
-        year = {2009},
-        journal = {Life Journale},
-        volume = {1}
+        parse_entry('''@ARTICLE{article-crossref,
+           crossref = {WHOLE-JOURNAL},
+           author = {L[eslie] A. Aamport},
+           title = {The Gnats and Gnus Document Preparation System},
+           pages = "73+",
+           note = "This is a cross-referencing ARTICLE entry",
         }''')
-        entry.validate(raise_unsupported=True)
+        pass
 
     def test_uppercase(self):
         """
@@ -171,6 +171,19 @@ class ValidationChecks(unittest.TestCase):
                                           "journal={My Journal}}")
         self.assertRaises(exceptions.InvalidStructure, broken_article.validate,
                 raise_unsupported=True)
+
+    def test_regression_article_with_volume(self):
+        """
+        Articles should support the volume attribute
+        """
+        entry = parser.parse_string('''@article{mm09,
+        author = {Max Mustermann},
+        title = {The story of my life},
+        year = {2009},
+        journal = {Life Journale},
+        volume = {1}
+        }''')
+        entry.validate(raise_unsupported=True)
 
     def test_broken_crossref(self):
         """

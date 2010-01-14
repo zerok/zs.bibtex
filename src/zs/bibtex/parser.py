@@ -114,7 +114,9 @@ field_value = pp.Or([
 field = (label + '=' + field_value).setName("field")
 field.setParseAction(parse_field)
 
-entry = (u'@' + label + u"{" + label + "," + pp.ZeroOrMore(field + ',') + field + u"}").setName("entry")
+entry_content = field + pp.ZeroOrMore(',' + field) + pp.Optional(',')
+
+entry = (u'@' + label + u"{" + label + "," + entry_content + u"}").setName("entry")
 entry.setParseAction(parse_entry)
 
 bibliography = (pp.OneOrMore(entry)).setName("bibliography")
