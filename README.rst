@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/zerok/zs.bibtex.svg?branch=master
+    :target: https://travis-ci.org/zerok/zs.bibtex
+
 This package for now only includes a quite basic parser for BibTeX which
 converts a bibliography and its entries into simple dict-like data structures
 and also checks crossreferences if used.
