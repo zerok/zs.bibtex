@@ -17,7 +17,7 @@ def test_article_structure():
         entry.validate(raise_unsupported=True)
         pytest.fail('An unsupported url field should have been detected')
     except exceptions.InvalidStructure as e:
-        assert str(e) == 'Missing or unsupported fields found [Unsupported fields: set([u\'url\'])]'
+        assert str(e) == 'Missing or unsupported fields found [Unsupported fields: url]'
 
     broken_article = parse_entry("@article{somename, author={Max "
                                         "Mustermann1}, title={Hello world}, "
@@ -26,7 +26,7 @@ def test_article_structure():
         broken_article.validate(raise_unsupported=True)
         pytest.fail('A missing year field should have been detected')
     except exceptions.InvalidStructure as e:
-        assert str(e) == 'Missing or unsupported fields found [Missing required fields: [\'year\']]'
+        assert str(e) == 'Missing or unsupported fields found [Missing required fields: year]'
 
 
 def test_alternative():
@@ -65,4 +65,4 @@ def test_broken_crossref():
         bib.validate()
         pytest.fail('Missing crossreference to "test" should have been detected')
     except exceptions.BrokenCrossReferences as e:
-        assert str(e) == 'One or more cross reference could not be resolved [Broken references: [u\'somename => test\']]'
+        assert str(e) == 'One or more cross reference could not be resolved [Broken references: somename => test]'

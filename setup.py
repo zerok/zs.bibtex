@@ -21,6 +21,8 @@ setup(
         packages=find_packages('src', exclude=['ez_setup']),
         package_dir = {'': 'src'},
         classifiers=[
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3.4',
             'Development Status :: 3 - Alpha',
             'Intended Audience :: Developers',
             'Programming Language :: Python',

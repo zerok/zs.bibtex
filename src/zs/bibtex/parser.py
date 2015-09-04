@@ -28,10 +28,10 @@ def parse_field(source, loc, tokens):
     """
     Returns the tokens of a field as key-value pair.
     """
-    name = unicode(tokens[0]).lower()
-    value = normalize_value(unicode(tokens[2]))
+    name = tokens[0].lower()
+    value = normalize_value(tokens[2])
     if name == u'author' and u' and ' in value:
-        value = map(string.strip, value.split(u' and '))
+        value = [field.strip() for field in value.split(u' and ')]
     return (name, value)
 
 def parse_entry(source, loc, tokens):
@@ -39,13 +39,14 @@ def parse_entry(source, loc, tokens):
     Converts the tokens of an entry into an Entry instance. If no applicable
     type is available, an UnsupportedEntryType exception is raised.
     """
-    type_ = unicode(tokens[1]).lower()
+    type_ = tokens[1].lower()
     entry_type = structures.TypeRegistry.get_type(type_)
     if entry_type is None or not issubclass(entry_type, structures.Entry):
-        raise exceptions.UnsupportedEntryType, \
+        raise exceptions.UnsupportedEntryType(
                 "%s is not a supported entry type" % type_
+            )
     new_entry = entry_type()
-    new_entry.name = unicode(tokens[3])
+    new_entry.name = tokens[3]
     for key, value in [t for t in tokens[4:-1] if t != ',']:
         new_entry[key] = value
     return new_entry
@@ -110,13 +111,18 @@ def parse_string(str_, validate=False):
         result.validate()
     return result
 
+
 def parse_file(file_or_path, encoding='utf-8', validate=False):
     """
     Tries to parse a given filepath or fileobj into a Bibliography instance. If
     ``validate`` is passed as keyword argument and set to ``True``, the
     Bibliography will be validated using the standard rules.
     """
-    if isinstance(file_or_path, (unicode, str)):
+    try:
+        is_string = isinstance(file_or_path, basestring)
+    except NameError:
+        is_string = isinstance(file_or_path, str)
+    if is_string:
         with codecs.open(file_or_path, 'r', encoding) as file_:
             result = pattern.parseFile(file_)[0]
     else:

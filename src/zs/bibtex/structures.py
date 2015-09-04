@@ -5,15 +5,15 @@ All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-* Redistributions of source code must retain the above copyright notice, this 
+* Redistributions of source code must retain the above copyright notice, this
   list of conditions and the following disclaimer.
 
-* Redistributions in binary form must reproduce the above copyright notice, 
-  this list of conditions and the following disclaimer in the documentation 
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
   and/or other materials provided with the distribution.
-  
-* Neither the name of the project nor the names of its contributors may 
-  be used to endorse or promote products derived from this software without   
+
+* Neither the name of the project nor the names of its contributors may
+  be used to endorse or promote products derived from this software without
   specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -29,8 +29,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------------------------------------------------------------------------
 
-This module holds all the structures produced by the parser. The main 
-structures are the clases ``Bibliography`` and ``Entry``. Both are 
+This module holds all the structures produced by the parser. The main
+structures are the clases ``Bibliography`` and ``Entry``. Both are
 slightly enhanced subclasses of ``dict`` and offer some additional
 field validation.
 
@@ -55,20 +55,20 @@ class TypeRegistry(object):
         """
 
         if not issubclass(type_, Entry):
-            raise exceptions.InvalidEntryType, "%s is not a subclass of Entry" % str(type_)
+            raise exceptions.InvalidEntryType("%s is not a subclass of Entry" % str(type_))
         cls._registry[name.lower()] = type_
 
     @classmethod
     def get_type(cls, name):
         """
-        Retrieve a type from the registry using its name as used in a bibtex 
+        Retrieve a type from the registry using its name as used in a bibtex
         file.
         """
         return cls._registry.get(name.lower())
 
 class Bibliography(dict):
     """
-    A counter for all entries of a BibTeX file. It also contains the 
+    A counter for all entries of a BibTeX file. It also contains the
     cross-reference validator.
     """
 
@@ -84,7 +84,7 @@ class Bibliography(dict):
         self.check_crossrefs()
         for value in self.values():
             value.validate(**kwargs)
-    
+
     def check_crossrefs(self):
         """
         Checks all crossreferences found in the bibliography. If one can not
@@ -107,7 +107,7 @@ class Bibliography(dict):
         """
         self[entry.name] = entry
 
-class Entry(dict): 
+class Entry(dict):
     """
     A slightly enhanced dict structure that acts as representation of an entry
     within a bibliography. It also comes with a generic validator for required
@@ -143,22 +143,22 @@ class Entry(dict):
                         found = True
             else:
                 flattened_required_fields.add(field)
-                if field in fields: 
+                if field in fields:
                     found = True
             if not found:
                 required_errors.append(field)
         unsupported_fields = fields - flattened_required_fields \
                 - set(self.optional_fields)
-        if len(required_errors) or (raise_unsupported 
+        if len(required_errors) or (raise_unsupported
                 and len(unsupported_fields)):
             raise exceptions.InvalidStructure("Missing or unsupported fields found",
-                    required_fields=required_errors, 
+                    required_fields=required_errors,
                     unsupported_fields=unsupported_fields)
 
-# The following required_fields/optiona_fields attributes are based on 
+# The following required_fields/optiona_fields attributes are based on
 # http://en.wikipedia.org/wiki/Bibtex
 
-class Article(Entry): 
+class Article(Entry):
     """Article in a journal, magazine etc."""
 
     required_fields = ('author', 'title', 'journal', 'year')
@@ -171,35 +171,35 @@ class Book(Entry):
     """A book that has already been published or at least has a publisher."""
 
     required_fields = (('author', 'editor'), 'title', 'publisher', 'year')
-    optional_fields = ('address', 'pages', 'volume', 'series', 'edition', 
+    optional_fields = ('address', 'pages', 'volume', 'series', 'edition',
             'month', 'note', 'key')
 
 TypeRegistry.register('book', Book)
 
-class Booklet(Entry): 
+class Booklet(Entry):
     """
     Similar to a book in the sense that it is bound but without a "real"
     publisher.
     """
 
     required_fields = Entry.required_fields
-    optional_fields = ('author', 'howpublished', 'address', 'month', 'year', 
+    optional_fields = ('author', 'howpublished', 'address', 'month', 'year',
             'note', 'key')
 
 TypeRegistry.register('booklet', Booklet)
 
 
-class Incollection(Entry): 
+class Incollection(Entry):
     """Part of a book but with its own title."""
 
     required_fields = ('author', 'title', 'year', 'booktitle'),
-    optional_fields = ('editor', 'pages', 'organization', 'publisher', 
+    optional_fields = ('editor', 'pages', 'organization', 'publisher',
             'address', 'month', 'note', 'key')
 
 TypeRegistry.register('incollection', Incollection)
 
 
-class Inproceedings(Incollection): 
+class Inproceedings(Incollection):
     """Article that is part of a conference proceedings."""
 
     pass
@@ -207,28 +207,28 @@ class Inproceedings(Incollection):
 TypeRegistry.register('inproceedings', Inproceedings)
 
 
-class Conference(Inproceedings): 
+class Conference(Inproceedings):
     """Similar to ``Inproceedings``."""
 
     required_fields = ('author', 'title', 'booktitle', 'year')
-    optional_fields = ('editor', 'pages', 'organization', 'publisher', 
+    optional_fields = ('editor', 'pages', 'organization', 'publisher',
             'address', 'month', 'note', 'key')
 
 TypeRegistry.register('conference', Conference)
 
 
-class Inbook(Entry): 
+class Inbook(Entry):
     """Part of a book."""
 
     required_fields = (('author', 'editor'), 'title', 'publisher', 'year',
             ('chapter', 'pages'))
-    optional_fields = ('volume', 'series', 'address', 'edition', 'month', 
+    optional_fields = ('volume', 'series', 'address', 'edition', 'month',
             'note', 'key')
 
 TypeRegistry.register('inbook', Inbook)
 
 
-class Manual(Entry): 
+class Manual(Entry):
     """A technical manual."""
 
     required_fields = ('title',)
@@ -238,7 +238,7 @@ class Manual(Entry):
 TypeRegistry.register('manual', Manual)
 
 
-class Mastersthesis(Entry): 
+class Mastersthesis(Entry):
     """A Master's thesis"""
 
     required_fields = ('author', 'title', 'school', 'year')
@@ -251,13 +251,13 @@ class Misc(Entry):
     """Type of document that doesn't fit into any of the other categories."""
 
     required_fields = []
-    optional_fields = ('author', 'title', 'howpublished', 'month', 'year', 
+    optional_fields = ('author', 'title', 'howpublished', 'month', 'year',
             'note', 'key')
 
 TypeRegistry.register('misc', Misc)
 
 
-class Phdthesis(Mastersthesis): 
+class Phdthesis(Mastersthesis):
     """A Ph.D. thesis."""
     pass
 
@@ -268,7 +268,7 @@ class Proceedings(Entry):
     """Conference proceedings."""
 
     required_fields = ('title', 'year')
-    optional_fields = ('editor', 'publisher', 'organization', 'address', 
+    optional_fields = ('editor', 'publisher', 'organization', 'address',
             'month', 'note', 'key')
 
 TypeRegistry.register('proceedings', Proceedings)
@@ -289,4 +289,3 @@ class Unpublished(Entry):
     optional_fields = ('month', 'year', 'key',)
 
 TypeRegistry.register('unpublished', Unpublished)
-
