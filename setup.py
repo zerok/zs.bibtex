@@ -13,7 +13,7 @@ setup(
         url='http://bitbucket.org/zerok/zsbibtex/',
         license='BSD',
         description='A small collection of bibtex utilities (incl. a minimal parser)',
-        long_description = open(join(dirname(abspath(__file__)),'README')).read(),
+        long_description = open(join(dirname(abspath(__file__)),'README.rst')).read(),
         version='0.1.0',
         setup_requires=['setuptools_hg'],
         install_requires=['setuptools', 'pyparsing==1.5.0'],
