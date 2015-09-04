@@ -16,7 +16,7 @@ setup(
         long_description = open(join(dirname(abspath(__file__)),'README.rst')).read(),
         version='0.1.0',
         setup_requires=['setuptools_hg'],
-        install_requires=['setuptools', 'pyparsing==1.5.0'],
+        install_requires=['setuptools', 'pyparsing'],
         namespace_packages=['zs'],
         packages=find_packages('src', exclude=['ez_setup']),
         package_dir = {'': 'src'},
