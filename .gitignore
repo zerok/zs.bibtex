@@ -4,3 +4,7 @@ bin
 *.egg-info
 develop-eggs
 *.egg
+.eggs
+.tox
+.coverage
+htmlcov
