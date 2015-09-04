@@ -1,7 +1,8 @@
+import io
 import pyparsing
 import pytest
 
-from zs.bibtex import exceptions, structures
+from zs.bibtex import exceptions, structures, parser
 from .helpers import parse_entry, parse_bibliography
 
 
@@ -111,3 +112,72 @@ def test_basetypes():
     for type_ in types:
         inp = '@%s {name, title = {test}}' % type_
         parse_entry(inp)
+
+
+def test_with_validation():
+    inp = '''% some comment
+    @article { name, author = {Max Mustermann},
+        title = {la%la}
+    }
+    '''
+    with pytest.raises(exceptions.InvalidStructure):
+        parser.parse_string(inp, validate=True)
+
+    inp = '''% some comment
+    @article { name, author = {Max Mustermann},
+        year = {2009},
+        journal = {Life Journale},
+        title = {la%la}
+    }
+    '''
+    parser.parse_string(inp, validate=True)
+
+
+def test_file_as_path(tmpdir):
+    test_file = tmpdir.join('test.bib')
+    test_file.write('''
+    @article { name, author = {Max Mustermann},
+        year = {2009},
+        journal = {Life Journale},
+        title = {la%la}
+    }
+    ''')
+    parser.parse_file(str(test_file))
+    parser.parse_file(str(test_file), validate=True)
+
+    # Invalid structure
+    test_file.write('''
+    @article { name, author = {Max Mustermann},
+        title = {la%la}
+    }
+    ''')
+    parser.parse_file(str(test_file))
+    with pytest.raises(exceptions.InvalidStructure):
+        parser.parse_file(str(test_file), validate=True)
+
+
+def test_file_as_object(tmpdir):
+    test_file = tmpdir.join('test.bib')
+    test_file.write('''
+    @article { name, author = {Max Mustermann},
+        year = {2009},
+        journal = {Life Journale},
+        title = {la%la}
+    }
+    ''')
+    with io.open(str(test_file), encoding='utf-8') as fp:
+        parser.parse_file(fp)
+    with io.open(str(test_file), encoding='utf-8') as fp:
+        parser.parse_file(fp, validate=True)
+
+    # Invalid structure
+    test_file.write('''
+    @article { name, author = {Max Mustermann},
+        title = {la%la}
+    }
+    ''')
+    with io.open(str(test_file), encoding='utf-8') as fp:
+        parser.parse_file(fp)
+    with io.open(str(test_file), encoding='utf-8') as fp:
+        with pytest.raises(exceptions.InvalidStructure):
+            parser.parse_file(fp, validate=True)
