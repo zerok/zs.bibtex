@@ -8,3 +8,5 @@ develop-eggs
 .tox
 .coverage
 htmlcov
+dist
+build
