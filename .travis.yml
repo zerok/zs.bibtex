@@ -1,0 +1,11 @@
+language: python
+sudo: false
+env:
+  matrix:
+    - TOXENV=py27-pp150
+    - TOXENV=py27-pp157
+    - TOXENV=py27-pp203
+    - TOXENV=py34-pp203
+install:
+  - pip install tox
+script: tox
