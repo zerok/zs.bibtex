@@ -28,9 +28,9 @@ class InvalidStructure(RuntimeError):
     def __str__(self):
         val = super(InvalidStructure, self).__str__()
         if self.required_fields is not None and len(self.required_fields):
-            val += ' [Missing required fields: %s]' % u', '.join(self.required_fields)
+            val += ' [Missing required fields: %s]' % ', '.join(self.required_fields)
         if self.unsupported_fields is not None and len(self.unsupported_fields):
-            val += ' [Unsupported fields: %s]' % u', '.join(self.unsupported_fields)
+            val += ' [Unsupported fields: %s]' % ', '.join(self.unsupported_fields)
         return val
 
 class BrokenCrossReferences(RuntimeError):
@@ -44,5 +44,5 @@ class BrokenCrossReferences(RuntimeError):
 
     def __str__(self):
         val = super(BrokenCrossReferences, self).__str__()
-        refs = u''.join(['%s => %s' % (e.name, e['crossref']) for e in self.entries])
+        refs = ''.join(['%s => %s' % (e.name, e['crossref']) for e in self.entries])
         return val + ' [Broken references: %s]' % refs

@@ -7,6 +7,9 @@ and also checks crossreferences if used.
     The parser does not (and probably never will) support some of the more
     advanced BibTeX-features like preambles.
 
+    It also doesn't convert things like accented characters into unicode but
+    leaves them as they were in the original input.
+
 A simple example on how to use it::
 
     from zs.bibtex.parser import parse_string

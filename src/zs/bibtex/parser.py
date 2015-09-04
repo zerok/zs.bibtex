@@ -30,8 +30,8 @@ def parse_field(source, loc, tokens):
     """
     name = tokens[0].lower()
     value = normalize_value(tokens[2])
-    if name == u'author' and u' and ' in value:
-        value = [field.strip() for field in value.split(u' and ')]
+    if name == 'author' and ' and ' in value:
+        value = [field.strip() for field in value.split(' and ')]
     return (name, value)
 
 def parse_entry(source, loc, tokens):
@@ -64,7 +64,7 @@ def parse_bstring(source, loc, tokens):
     """
     Combines all the found subtokens into a single string.
     """
-    return u''.join(tokens)
+    return ''.join(tokens)
 
 ###############################################################################
 # Grammar
@@ -88,7 +88,7 @@ field.setParseAction(parse_field)
 
 entry_content = field + pp.ZeroOrMore(',' + field) + pp.Optional(',')
 
-entry = (u'@' + label + u"{" + label + "," + entry_content + u"}").setName("entry")
+entry = ('@' + label + "{" + label + "," + entry_content + "}").setName("entry")
 entry.setParseAction(parse_entry)
 
 bibliography = (pp.OneOrMore(entry)).setName("bibliography")
