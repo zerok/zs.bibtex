@@ -9,7 +9,7 @@ setup(
         license='BSD',
         description='A small collection of bibtex utilities (incl. a minimal parser)',
         long_description = open(join(dirname(abspath(__file__)),'README.rst')).read(),
-        version='1.0.0-rc1',
+        version='1.0.0',
         install_requires=['setuptools', 'pyparsing'],
         namespace_packages=['zs'],
         packages=find_packages('src', exclude=['ez_setup']),
